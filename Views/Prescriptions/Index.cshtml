@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CabinetMedical.Models.Prescription>
+
+@{
+    ViewBag.Title = "Médicaments Prescrits";
+}
+
+<h3>
+    Médicaments pour : <span class="text-primary">@ViewBag.PatientNom</span>
+</h3>
+
+<p>
+    <a href="@Url.Action("Create", new { idConsultation = ViewBag.IdConsultation })" class="btn btn-success">
+        <i class="fa-solid fa-plus"></i> Ajouter un médicament
+    </a>
+
+    <a href="@Url.Action("Index", "Consultations", new { idPatient = Model.FirstOrDefault()?.Consultation.IdPatient })" class="btn btn-default">
+        Retour aux Consultations
+    </a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead class="bg-info">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Medicament)</th>
+            <th>@Html.DisplayNameFor(model => model.Posologie)</th>
+            <th>@Html.DisplayNameFor(model => model.Duree)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><strong>@Html.DisplayFor(modelItem => item.Medicament)</strong></td>
+                <td>@Html.DisplayFor(modelItem => item.Posologie)</td>
+                <td>@Html.DisplayFor(modelItem => item.Duree)</td>
+                <td>
+                    <a href="@Url.Action("Delete", new { id = item.IdPrescription })" class="btn btn-danger btn-xs">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

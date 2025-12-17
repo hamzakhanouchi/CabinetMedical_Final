@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - MediCare Pro</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+    <style>
+        /* --- CSS MODERNE INTEGRÉ --- */
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #858796;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fc;
+            overflow-x: hidden;
+        }
+
+        /* SIDEBAR STYLE */
+        .sidebar {
+            height: 100vh;
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+            padding-top: 20px;
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.8);
+            display: block;
+            transition: 0.3s;
+            border-left: 5px solid transparent;
+        }
+
+            .sidebar a:hover {
+                color: #fff;
+                background-color: rgba(255,255,255,0.1);
+                border-left: 5px solid #fff;
+            }
+
+        .sidebar i {
+            width: 30px;
+        }
+
+        /* CONTENT STYLE */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        /* CARD STYLE (Glassmorphism light) */
+        .card, .panel {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            background-color: white;
+            margin-bottom: 25px;
+        }
+
+        /* TABLE STYLE */
+        .table thead th {
+            background-color: #f8f9fc;
+            border-bottom: 2px solid #e3e6f0;
+            color: #4e73df;
+            font-weight: 600;
+        }
+
+        /* BOUTONS MODERNES */
+        .btn {
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.15s ease;
+        }
+
+            .btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+            }
+
+        .navbar-top {
+            background: white;
+            box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 30px;
+            border-radius: 15px;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-heart-pulse"></i> MEDI<span style="color:#a8dfff">CARE</span>
+        </div>
+
+        <a href="@Url.Action("Index", "Home")"><i class="fa-solid fa-house"></i> Tableau de bord</a>
+
+        @if (Request.IsAuthenticated)
+        {
+            <a href="@Url.Action("Index", "Patients")"><i class="fa-solid fa-users"></i> Patients</a>
+            <a href="@Url.Action("Index", "RendezVous")"><i class="fa-solid fa-calendar-check"></i> Rendez-vous</a>
+
+            if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
+            {
+                <a href="@Url.Action("Index", "Utilisateurs")"><i class="fa-solid fa-user-doctor"></i> Personnel</a>
+            }
+
+            <hr style="border-color: rgba(255,255,255,0.2); margin: 20px;">
+            <a href="@Url.Action("Logout", "Account")"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
+        }
+        else
+        {
+            <a href="@Url.Action("Login", "Account")"><i class="fa-solid fa-key"></i> Connexion</a>
+        }
+    </div>
+
+    <div class="main-content">
+
+        <div class="navbar-top">
+            <h4 class="m-0 text-primary">@ViewBag.Title</h4>
+            <div>
+                @if (Session["UserNom"] != null)
+                {
+                    <span class="mr-2 text-gray-600 small">Bonjour, <b>@Session["UserNom"]</b></span>
+                    <img src="https://ui-avatars.com/api/?name=@Session["UserNom"]&background=random" class="img-profile rounded-circle" width="35">
+                }
+            </div>
+        </div>
+
+        @RenderBody()
+
+        <footer class="text-center mt-5 text-muted small">
+            &copy; @DateTime.Now.Year - MediCare Pro System
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // On applique DataTables SEULEMENT sur les tables avec la classe 'table-triable'
+            // et on désactive le tri sur la dernière colonne (souvent les boutons Actions)
+            $('.table-triable').DataTable({
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/fr-FR.json"
+                },
+                columnDefs: [
+                    { orderable: false, targets: -1 } // Désactive le tri sur la dernière colonne
+                ]
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

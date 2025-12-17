@@ -1,0 +1,49 @@
+﻿@model IEnumerable<CabinetMedical.Models.RendezVous>
+
+@{ ViewBag.Title = "Gestion des Rendez-vous"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary"><i class="fa-solid fa-calendar-check"></i> Planning des Rendez-vous</h2>
+</div>
+
+<p>
+    @if (Session["UserRole"] != null && (Session["UserRole"].ToString() == "Secretaire" || Session["UserRole"].ToString() == "Medecin"))
+    {
+        <a href="@Url.Action("Create")" class="btn btn-success shadow">
+            <i class="fa-solid fa-calendar-plus"></i> Nouveau Rendez-vous
+        </a>
+    }
+</p>
+
+<table class="table table-hover table-bordered shadow-sm bg-white table-triable">
+    <thead class="bg-primary text-white">
+        <tr>
+            <th>Patient</th>
+            <th>Médecin</th>
+            <th>Date et Heure</th>
+            <th>Motif</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><strong>@Html.DisplayFor(modelItem => item.Patient.Nom) @Html.DisplayFor(modelItem => item.Patient.Prenom)</strong></td>
+                <td>Dr. @Html.DisplayFor(modelItem => item.Medecin.Nom)</td>
+                <td>@item.DateHeure.ToString("g")</td>
+                <td>@Html.DisplayFor(modelItem => item.Motif)</td>
+                <td>
+                    @if (item.DateHeure < DateTime.Now)
+                    {
+                        <span class="badge bg-secondary">Terminé</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">À venir</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

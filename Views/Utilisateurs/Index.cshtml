@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CabinetMedical.Models.Utilisateur>
+
+@{ ViewBag.Title = "Gestion du Personnel"; }
+
+<h2><i class="fa-solid fa-users-gear"></i> Administration du Personnel</h2>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">
+        <i class="fa-solid fa-user-plus"></i> Nouvel Employé
+    </a>
+</p>
+
+<table class="table table-bordered table-hover bg-white">
+    <thead class="bg-primary" style="color: white;">
+        <tr>
+            <th>Nom Complet</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Spécialité</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Nom @item.Prenom</td>
+                <td>@item.Email</td>
+                <td>
+                    @if (item.Role == "Admin")
+                    {<span class="label label-danger">Admin</span> }
+                    else if (item.Role == "Medecin")
+                    { <span class="label label-success">Médecin</span> }
+                    else
+                    { <span class="label label-info">Secrétaire</span>}
+                </td>
+                <td>@item.Specialite</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id=item.IdUtilisateur })" class="btn btn-warning btn-xs"><i class="fa fa-pen"></i></a>
+                    <a href="@Url.Action("Delete", new { id=item.IdUtilisateur })" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

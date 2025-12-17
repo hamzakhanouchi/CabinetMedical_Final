@@ -1,0 +1,83 @@
+﻿@model CabinetMedical.Models.Patient
+
+@{
+    ViewBag.Title = "Nouveau Patient";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-lg border-0 rounded-lg mt-3">
+            <div class="card-header bg-primary text-white">
+                <h3 class="text-center font-weight-light my-2">
+                    <i class="fa-solid fa-user-plus"></i> Créer une fiche Patient
+                </h3>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">Nom</label>
+                            @Html.EditorFor(model => model.Nom, new { htmlAttributes = new { @class = "form-control", placeholder = "Ex: Dupont" } })
+                            @Html.ValidationMessageFor(model => model.Nom, "", new { @class = "text-danger small" })
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">Prénom</label>
+                            @Html.EditorFor(model => model.Prenom, new { htmlAttributes = new { @class = "form-control", placeholder = "Ex: Jean" } })
+                            @Html.ValidationMessageFor(model => model.Prenom, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">Date de Naissance</label>
+                            @Html.EditorFor(model => model.DateNaissance, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                            @Html.ValidationMessageFor(model => model.DateNaissance, "", new { @class = "text-danger small" })
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">Sexe</label>
+                            @Html.DropDownListFor(model => model.Sexe, new SelectList(new List<string> { "M", "F" }), "Choisir...", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Sexe, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1"><i class="fa fa-phone"></i> Téléphone</label>
+                            @Html.EditorFor(model => model.Telephone, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1"><i class="fa fa-envelope"></i> Email</label>
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small mb-1">Adresse Complète</label>
+                        @Html.TextAreaFor(model => model.Adresse, new { @class = "form-control", rows = "2" })
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="small mb-1">Groupe Sanguin</label>
+                            @Html.EditorFor(model => model.GroupeSanguin, new { htmlAttributes = new { @class = "form-control", placeholder = "Ex: O+" } })
+                        </div>
+                        <div class="col-md-8">
+                            <label class="small mb-1">Allergies connues</label>
+                            @Html.EditorFor(model => model.Allergies, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-block">Enregistrer le Patient</button>
+                    </div>
+                }
+            </div>
+            <div class="card-footer text-center py-3">
+                <div class="small"><a href="@Url.Action("Index")">Revenir à la liste sans enregistrer</a></div>
+            </div>
+        </div>
+    </div>
+</div>

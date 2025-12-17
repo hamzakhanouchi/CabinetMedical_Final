@@ -1,0 +1,134 @@
+﻿@model CabinetMedical.Models.Consultation
+
+@{
+    Layout = null; /* TRES IMPORTANT : Cela enlève le menu et le pied de page du site */
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Ordonnance - @Model.Patient.Nom @Model.Patient.Prenom</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+           body {
+               font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+               padding: 40px;
+               color: #333;
+               background-color: white; /* Fond blanc pour l'impression */
+           }
+           .header-medecin {
+               border-bottom: 2px solid #0056b3;
+               padding-bottom: 20px;
+               margin-bottom: 30px;
+           }
+           .info-patient {
+               background-color: #f9f9f9;
+               padding: 15px;
+               border-radius: 5px;
+               margin-bottom: 30px;
+               border-left: 5px solid #0056b3;
+           }
+           .date-jour {
+               text-align: right;
+               font-size: 1.1em;
+               margin-bottom: 30px;
+           }
+           .contenu-ordonnance {
+               min-height: 400px; /* Assure que l'ordonnance a une bonne taille */
+               font-size: 1.3em;
+               line-height: 1.8em;
+               padding: 20px;
+           }
+           .signature {
+               margin-top: 50px;
+               text-align: right;
+           }
+           .btn-print {
+               position: fixed;
+               bottom: 20px;
+               right: 20px;
+               z-index: 9999;
+           }
+
+        /* --- STYLE SPÉCIAL IMPRESSION --- */
+           /* Note les deux @@ ci-dessous */
+           @@media print {
+               .btn-print { display: none; } /* Cache le bouton imprimer */
+               body { padding: 0; margin: 0; }
+               .info-patient { background-color: #eee !important; -webkit-print-color-adjust: exact; }
+           }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row header-medecin">
+            <div class="col-xs-8">
+                <h2 class="text-primary" style="margin-top:0;"><strong>Dr. @Model.Medecin.Prenom @Model.Medecin.Nom</strong></h2>
+                <p>Médecine Générale & Spécialisée</p>
+                <p><i class="fa fa-phone"></i> +212 6 00 00 00 00 | <i class="fa fa-envelope"></i> @Model.Medecin.Email</p>
+            </div>
+            <div class="col-xs-4 text-right">
+                <i class="fa-solid fa-staff-snake fa-5x" style="color: #ddd;"></i>
+            </div>
+        </div>
+
+        <div class="date-jour">
+            Rabat, le <strong>@Model.DateConsultation.ToString("dd MMMM yyyy")</strong>
+        </div>
+
+        <div class="info-patient">
+            <h4>Patient : <strong>@Model.Patient.Nom @Model.Patient.Prenom</strong></h4>
+            <span>Âge : @(DateTime.Now.Year - Model.Patient.DateNaissance.Year) ans</span>
+        </div>
+
+        <h3 class="text-center" style="text-decoration: underline; margin-bottom: 30px; font-weight: bold;">ORDONNANCE</h3>
+
+        <div class="contenu-ordonnance">
+            @if (Model.Prescriptions != null && Model.Prescriptions.Count > 0)
+            {
+                /* Affiche le tableau si on a utilisé le module Prescriptions */
+                <table class="table" style="font-size: 1em; margin-top: 20px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #ccc;">
+                            <th style="width: 50%">Médicament</th>
+                            <th style="width: 30%">Posologie</th>
+                            <th style="width: 20%">Durée</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Prescriptions)
+                        {
+                            <tr>
+                                <td style="padding: 10px 0;"><strong>@p.Medicament</strong></td>
+                                <td style="padding: 10px 0;">@p.Posologie</td>
+                                <td style="padding: 10px 0;">@p.Duree</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                /* Sinon, affiche simplement le texte du champ Traitement */
+                <p style="white-space: pre-wrap;">@Model.Traitement</p>
+            }
+        </div>
+
+        <div class="signature">
+            <p>Signature et Cachet</p>
+            <br /><br /><br />
+            <p>____________________</p>
+        </div>
+    </div>
+
+    <button onclick="window.print()" class="btn btn-primary btn-lg btn-print">
+        <i class="fa fa-print"></i> Imprimer
+    </button>
+
+</body>
+</html>
