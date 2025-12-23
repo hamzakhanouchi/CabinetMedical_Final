@@ -1,9 +1,6 @@
-﻿@model IEnumerable<CabinetMedical.Models.RendezVous>
+﻿<div class="row mb-4">
 
-@{ ViewBag.Title = "Tableau de Bord"; }
-
-<div class="row mb-4">
-    <div class="col-xl-4 col-md-6 mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -20,7 +17,7 @@
         </div>
     </div>
 
-    <div class="col-xl-4 col-md-6 mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -28,74 +25,65 @@
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">RDV Aujourd'hui</div>
                         <div class="h3 mb-0 font-weight-bold text-gray-800">@ViewBag.RdvAujourdhui</div>
                     </div>
-                    <div class="col-auto"><i class="fas fa-calendar-check fa-2x text-gray-300"></i></div>
+                    <div class="col-auto"><i class="fas fa-calendar-day fa-2x text-gray-300"></i></div>
                 </div>
             </div>
             <a href="@Url.Action("Index", "RendezVous")" class="card-footer bg-white text-success text-center small" style="text-decoration:none;">
-                Gérer le planning <i class="fa fa-arrow-circle-right"></i>
+                Voir le planning <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
     </div>
 
-    <div class="col-xl-4 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
-            <div class="card-body d-flex flex-column justify-content-center">
-                <a href="@Url.Action("Create", "Patients")" class="btn btn-primary mb-2">
-                    <i class="fa-solid fa-user-plus"></i> Nouveau Patient
-                </a>
-                @if (Session["UserRole"] != null && Session["UserRole"].ToString() != "Admin")
-                {
-                    <a href="@Url.Action("Create", "RendezVous")" class="btn btn-success">
-                        <i class="fa-solid fa-calendar-plus"></i> Nouveau RDV
-                    </a>
-                }
+    @if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
+    {
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Médecins
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @ViewBag.NombreMedecins
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-doctor fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-info text-center small">Équipe Médicale</div>
             </div>
         </div>
-    </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Secrétaires
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @ViewBag.NombreSecretaires
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-nurse fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-warning text-center small">Administration</div>
+            </div>
+        </div>
+    }
 </div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3 bg-white">
-        <h6 class="m-0 font-weight-bold text-primary"><i class="fa-solid fa-clock"></i> Prochains Rendez-vous</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped" width="100%" cellspacing="0">
-                <thead class="bg-light">
-                    <tr>
-                        <th>Heure</th>
-                        <th>Patient</th>
-                        <th>Médecin</th>
-                        <th>Motif</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Any())
-                    {
-                        foreach (var item in Model)
-                        {
-                            <tr>
-                                <td class="font-weight-bold text-primary">@item.DateHeure.ToString("dd/MM à HH:mm")</td>
-                                <td>@item.Patient.Nom @item.Patient.Prenom</td>
-                                <td>Dr. @item.Medecin.Nom</td>
-                                <td>@item.Motif</td>
-                                <td>
-                                    <a href="@Url.Action("Details", "RendezVous", new { id = item.IdRendezVous })" class="btn btn-info btn-sm btn-circle text-white">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="5" class="text-center text-muted">Aucun rendez-vous à venir.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+<div class="row mb-4">
+    <div class="col-12">
+        <a href="@Url.Action("Create", "Patients")" class="btn btn-primary shadow-sm">
+            <i class="fa-solid fa-user-plus"></i> Nouveau Patient
+        </a>
     </div>
 </div>

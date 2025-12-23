@@ -12,16 +12,19 @@ namespace CabinetMedical.Controllers
 
         public ActionResult Index()
         {
-            // 1. Les Chiffres
+            // 1. Compter les Patients
             ViewBag.NombrePatients = db.Patients.Count();
 
-            // RDV d'aujourd'hui
+            // 2. Compter les RDV d'aujourd'hui
             ViewBag.RdvAujourdhui = db.RendezVous.Count(r => r.DateHeure.Year == DateTime.Now.Year
                                                            && r.DateHeure.Month == DateTime.Now.Month
                                                            && r.DateHeure.Day == DateTime.Now.Day);
 
-            // 2. Les 5 Prochains Rendez-vous (C'est ça le "Darouri")
-            // On prend les RDV futurs, on les trie par date, et on prend les 5 premiers
+            // 3. --- C'EST ICI QUE TU DOIS AJOUTER LES COMPTEURS MANQUANTS ---
+            ViewBag.NombreMedecins = db.Utilisateurs.Count(u => u.Role == "Medecin");
+            ViewBag.NombreSecretaires = db.Utilisateurs.Count(u => u.Role == "Secretaire");
+
+            // 4. Charger les prochains RDV
             var prochainsRdv = db.RendezVous
                                  .Include("Patient")
                                  .Include("Medecin")
@@ -30,7 +33,7 @@ namespace CabinetMedical.Controllers
                                  .Take(5)
                                  .ToList();
 
-            return View(prochainsRdv); // On envoie la liste à la vue
+            return View(prochainsRdv);
         }
 
         public ActionResult About()

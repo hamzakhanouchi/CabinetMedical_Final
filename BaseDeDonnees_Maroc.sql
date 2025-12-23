@@ -1,8 +1,8 @@
 -- 1. ON FORCE LA BONNE BASE DE DONNÉES
-USE CabinetMedicalDB; 
+USE CabinetMedicalDB;
 GO
 
--- 2. VIDER LES TABLES (Nettoyage propre)
+-- 2. VIDER LES TABLES (Nettoyage propre - Ordre important pour les clés étrangères)
 DELETE FROM Prescriptions;
 DELETE FROM Consultations;
 DELETE FROM RendezVous;
@@ -16,27 +16,23 @@ DBCC CHECKIDENT ('RendezVous', RESEED, 0);
 DBCC CHECKIDENT ('Patients', RESEED, 0);
 DBCC CHECKIDENT ('Utilisateurs', RESEED, 0);
 
--- 4. AJOUTER L'ADMINISTRATEUR
+-- 4. AJOUTER L'ADMINISTRATEUR (ID = 1)
 INSERT INTO Utilisateurs (Nom, Prenom, Email, MotDePasse, Role, Specialite, DateCreation)
 VALUES ('Admin', 'System', 'admin@cabinet.com', 'admin123', 'Admin', NULL, GETDATE());
 
--- 5. AJOUTER 9 MÉDECINS (Maroc)
+-- 5. AJOUTER 5 MÉDECINS (ID = 2 à 6)
 INSERT INTO Utilisateurs (Nom, Prenom, Email, MotDePasse, Role, Specialite, DateCreation) VALUES
-('Tazi', 'Karim', 'dr.tazi@cabinet.com', 'pass123', 'Medecin', 'Cardiologie', GETDATE()),
-('Berrada', 'Zineb', 'dr.berrada@cabinet.com', 'pass123', 'Medecin', 'Pédiatrie', GETDATE()),
-('Benjelloun', 'Omar', 'dr.benjelloun@cabinet.com', 'pass123', 'Medecin', 'Généraliste', GETDATE()),
-('El Idrissi', 'Sara', 'dr.elidrissi@cabinet.com', 'pass123', 'Medecin', 'Dermatologie', GETDATE()),
-('Chraibi', 'Youssef', 'dr.chraibi@cabinet.com', 'pass123', 'Medecin', 'Chirurgie', GETDATE()),
-('Alami', 'Nadia', 'dr.alami@cabinet.com', 'pass123', 'Medecin', 'Gynécologie', GETDATE()),
-('Bennani', 'Mehdi', 'dr.bennani@cabinet.com', 'pass123', 'Medecin', 'Ophtalmologie', GETDATE()),
-('El Fassi', 'Hajar', 'dr.elfassi@cabinet.com', 'pass123', 'Medecin', 'Neurologie', GETDATE()),
-('Naciri', 'Ahmed', 'dr.naciri@cabinet.com', 'pass123', 'Medecin', 'ORL', GETDATE());
+('Tazi', 'Karim', 'dr.tazi@cabinet.com', 'pass123', 'Medecin', 'Cardiologie', GETDATE()),      -- ID 2
+('Berrada', 'Zineb', 'dr.berrada@cabinet.com', 'pass123', 'Medecin', 'Pédiatrie', GETDATE()),     -- ID 3
+('Benjelloun', 'Omar', 'dr.benjelloun@cabinet.com', 'pass123', 'Medecin', 'Généraliste', GETDATE()), -- ID 4
+('El Idrissi', 'Sara', 'dr.elidrissi@cabinet.com', 'pass123', 'Medecin', 'Dermatologie', GETDATE()),-- ID 5
+('Chraibi', 'Youssef', 'dr.chraibi@cabinet.com', 'pass123', 'Medecin', 'Chirurgie', GETDATE());   -- ID 6
 
--- Ajout d'une secrétaire
+-- Ajout d'une secrétaire (ID = 7) - Utile pour tester la prise de RDV
 INSERT INTO Utilisateurs (Nom, Prenom, Email, MotDePasse, Role, Specialite, DateCreation)
 VALUES ('Mansouri', 'Laila', 'secr@cabinet.com', 'pass123', 'Secretaire', NULL, GETDATE());
 
--- 6. AJOUTER 20 PATIENTS (Maroc)
+-- 6. AJOUTER 15 PATIENTS (Maroc) (ID = 1 à 15)
 INSERT INTO Patients (Nom, Prenom, DateNaissance, Sexe, Adresse, Telephone, Email, GroupeSanguin, Allergies, MaladiesChroniques) VALUES
 ('Alaoui', 'Mohammed', '1985-04-12', 'M', '12 Bd Zerktouni, Casablanca', '0661111111', 'mohammed.a@email.com', 'A+', 'Pollen', NULL),
 ('El Amrani', 'Fatima', '1990-06-23', 'F', '45 Av. Fal Ould Oumeir, Rabat', '0661111112', 'fatima.e@email.com', 'O-', NULL, 'Asthme'),
@@ -52,32 +48,25 @@ INSERT INTO Patients (Nom, Prenom, DateNaissance, Sexe, Adresse, Telephone, Emai
 ('Hammani', 'Bilal', '2005-01-20', 'M', 'Tabriquet, Salé', '0661111122', 'bilal.h@email.com', 'B+', NULL, NULL),
 ('Belkhayat', 'Samia', '1975-10-30', 'F', 'Martil, Tetouan', '0661111123', 'samia.b@email.com', 'O-', NULL, 'Migraine'),
 ('Ziani', 'Tarik', '1989-04-04', 'M', 'Lazaret, Oujda', '0661111124', 'tarik.z@email.com', 'A-', NULL, NULL),
-('Kadiri', 'Leila', '1996-06-18', 'F', 'Bir Rami, Kenitra', '0661111125', 'leila.k@email.com', 'AB+', NULL, NULL),
-('Daoudi', 'Hassan', '1980-11-11', 'M', 'Massira, Marrakech', '0661111126', 'hassan.d@email.com', 'O+', 'Lactose', NULL),
-('El Fassi', 'Kenza', '2000-08-25', 'F', 'Route de Sefrou, Fès', '0661111127', 'kenza.f@email.com', 'B-', NULL, NULL),
-('Bensouda', 'Othmane', '1960-02-28', 'M', 'Californie, Casablanca', '0661111128', 'othmane.b@email.com', 'A+', NULL, 'Cholestérol'),
-('Chaoui', 'Inès', '1993-12-12', 'F', 'Plateau, Safi', '0661111129', 'ines.c@email.com', 'O+', NULL, NULL),
-('Hassani', 'Yassine', '1987-09-09', 'M', 'Mohammedia Centre', '0661111130', 'yassine.h@email.com', 'AB-', NULL, NULL);
+('Kadiri', 'Leila', '1996-06-18', 'F', 'Bir Rami, Kenitra', '0661111125', 'leila.k@email.com', 'AB+', NULL, NULL);
 
--- 7. AJOUTER 20 RENDEZ-VOUS
+-- 7. AJOUTER RENDEZ-VOUS (Adaptés aux 5 Médecins IDs 2 à 6)
+-- Note: Les IdMedecin doivent être entre 2 et 6.
 INSERT INTO RendezVous (DateHeure, Motif, IdPatient, IdMedecin) VALUES
-(DATEADD(day, 1, GETDATE()), 'Consultation Cardiologie', 1, 2), -- Demain (Dr. Tazi)
-(DATEADD(day, 2, GETDATE()), 'Suivi Asthme', 5, 6),
-(DATEADD(day, 0, GETDATE()), 'Urgence Fièvre', 2, 3), -- Aujourd'hui (Dr. Berrada)
-(DATEADD(day, 3, GETDATE()), 'Certificat Médical', 10, 4),
-(DATEADD(day, -1, GETDATE()), 'Grippe Saisonnière', 3, 2), -- Hier (Passé)
-(DATEADD(day, -5, GETDATE()), 'Contrôle Diabète', 8, 7),
-(DATEADD(day, 5, GETDATE()), 'Vaccination', 12, 8),
-(DATEADD(day, 1, GETDATE()), 'Consultation Dermato', 15, 5),
-(DATEADD(day, 4, GETDATE()), 'Mal de dos', 6, 9),
-(DATEADD(day, 2, GETDATE()), 'Bilan sanguin', 7, 10),
-(DATEADD(day, 6, GETDATE()), 'Suivi Post-op', 4, 3),
-(DATEADD(day, -2, GETDATE()), 'Renouvellement Ordonnance', 9, 2),
-(DATEADD(day, 7, GETDATE()), 'Consultation Pédiatrique', 17, 8),
-(DATEADD(day, 0, GETDATE()), 'Douleur Thoracique', 18, 2), -- Aujourd'hui
-(DATEADD(day, 8, GETDATE()), 'Allergie', 11, 5),
-(DATEADD(day, 10, GETDATE()), 'Fatigue chronique', 13, 6),
-(DATEADD(day, -10, GETDATE()), 'Première visite', 14, 5),
-(DATEADD(day, 3, GETDATE()), 'Check-up', 16, 9),
-(DATEADD(day, 1, GETDATE()), 'Angine', 19, 4),
-(DATEADD(day, 9, GETDATE()), 'Consultation Générale', 20, 10);
+(DATEADD(day, 1, GETDATE()), 'Consultation Cardiologie', 1, 2), -- Dr Tazi
+(DATEADD(day, 2, GETDATE()), 'Suivi Asthme', 2, 4),           -- Dr Benjelloun
+(DATEADD(day, 0, GETDATE()), 'Urgence Fièvre', 3, 3),         -- Dr Berrada (Pédiatre)
+(DATEADD(day, 3, GETDATE()), 'Certificat Médical', 4, 4),     -- Dr Benjelloun
+(DATEADD(day, -1, GETDATE()), 'Grippe Saisonnière', 5, 2),    -- Dr Tazi (Passé)
+(DATEADD(day, -5, GETDATE()), 'Contrôle Dermatologique', 6, 5),-- Dr El Idrissi
+(DATEADD(day, 5, GETDATE()), 'Consultation Chirurgie', 7, 6), -- Dr Chraibi
+(DATEADD(day, 1, GETDATE()), 'Bilan Général', 8, 4),          -- Dr Benjelloun
+(DATEADD(day, 4, GETDATE()), 'Eczéma', 9, 5),                 -- Dr El Idrissi
+(DATEADD(day, 2, GETDATE()), 'Bilan sanguin', 10, 2),         -- Dr Tazi
+(DATEADD(day, 6, GETDATE()), 'Suivi Post-op', 11, 6),         -- Dr Chraibi
+(DATEADD(day, -2, GETDATE()), 'Renouvellement Ordonnance', 12, 4),
+(DATEADD(day, 7, GETDATE()), 'Vaccin Enfant', 13, 3),         -- Dr Berrada
+(DATEADD(day, 0, GETDATE()), 'Douleur Thoracique', 14, 2),    -- Dr Tazi (Aujourd'hui)
+(DATEADD(day, 8, GETDATE()), 'Allergie', 15, 5),              -- Dr El Idrissi
+(DATEADD(day, 10, GETDATE()), 'Fatigue chronique', 1, 4),
+(DATEADD(day, 3, GETDATE()), 'Check-up', 2, 6);

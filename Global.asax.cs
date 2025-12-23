@@ -16,6 +16,7 @@ namespace CabinetMedical
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            System.Web.Helpers.AntiForgeryConfig.SuppressIdentityHeuristicChecks = true;
         }
     }
 }
