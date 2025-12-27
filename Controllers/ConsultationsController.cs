@@ -56,6 +56,33 @@ namespace CabinetMedical.Controllers
             ViewBag.IdPatient = new SelectList(db.Patients, "IdPatient", "Nom");
             return View(new Consultation { DateConsultation = DateTime.Now });
         }
+        // GET: Consultations/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null) return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            Consultation consultation = db.Consultations.Find(id);
+            if (consultation == null) return HttpNotFound();
+
+            // Listes déroulantes pour modifier le patient ou le médecin si besoin
+            ViewBag.IdPatient = new SelectList(db.Patients, "IdPatient", "Nom", consultation.IdPatient);
+            ViewBag.IdMedecin = new SelectList(db.Utilisateurs.Where(u => u.Role == "Medecin"), "IdUtilisateur", "Nom", consultation.IdMedecin);
+            return View(consultation);
+        }
+        // POST: Consultations/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "IdConsultation,DateConsultation,Diagnostic,Traitement,Observations,IdPatient,IdMedecin")] Consultation consultation)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(consultation).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.IdPatient = new SelectList(db.Patients, "IdPatient", "Nom", consultation.IdPatient);
+            ViewBag.IdMedecin = new SelectList(db.Utilisateurs.Where(u => u.Role == "Medecin"), "IdUtilisateur", "Nom", consultation.IdMedecin);
+            return View(consultation);
+        }
 
         // POST: Consultations/Create
         [HttpPost]

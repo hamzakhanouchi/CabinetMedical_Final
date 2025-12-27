@@ -1,0 +1,33 @@
+﻿@model CabinetMedical.Models.Patient
+
+@{ ViewBag.Title = "Supprimer Patient"; }
+
+<h3 class="text-danger">Êtes-vous sûr de vouloir supprimer ce patient ?</h3>
+<div class="card shadow mb-4 border-left-danger">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-danger">Suppression du dossier : @Model.Nom @Model.Prenom</h6>
+    </div>
+    <div class="card-body">
+        <dl class="dl-horizontal">
+            <dt>Date de Naissance</dt>
+            <dd>@Model.DateNaissance.ToShortDateString()</dd>
+            <dt>Téléphone</dt>
+            <dd>@Model.Telephone</dd>
+            <dt>Email</dt>
+            <dd>@Model.Email</dd>
+        </dl>
+
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i> Attention : Cela supprimera aussi tout l'historique de ce patient (RDV, Consultations).
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-actions no-color">
+                <input type="submit" value="Confirmer la suppression" class="btn btn-danger" />
+                @Html.ActionLink("Annuler", "Index", null, new { @class = "btn btn-secondary" })
+            </div>
+        }
+    </div>
+</div>

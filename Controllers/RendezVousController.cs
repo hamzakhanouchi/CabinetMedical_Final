@@ -16,18 +16,17 @@ namespace CabinetMedical.Controllers
         // GET: RendezVous
         public ActionResult Index()
         {
-            // On inclut les données des Patients et Médecins pour afficher les noms au lieu des ID
+            // On récupère tout
             var rendezVous = db.RendezVous.Include(r => r.Medecin).Include(r => r.Patient);
-            return View(rendezVous.ToList());
-        }
 
-        // GET: RendezVous/Create
-        public ActionResult Create()
-        {
-            // On prépare les listes déroulantes (ViewBag)
-            ViewBag.IdMedecin = new SelectList(db.Utilisateurs.Where(u => u.Role == "Medecin"), "IdUtilisateur", "NomComplet");
-            ViewBag.IdPatient = new SelectList(db.Patients, "IdPatient", "Nom"); // Tu peux concaténer Nom+Prénom si tu veux
-            return View();
+            // FILTRE : Si c'est un Médecin, on ne montre que SES rendez-vous
+            if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Medecin")
+            {
+                int medecinId = (int)Session["UserId"]; // On récupère son ID
+                rendezVous = rendezVous.Where(r => r.IdMedecin == medecinId);
+            }
+
+            return View(rendezVous.ToList());
         }
 
         // POST: RendezVous/Create

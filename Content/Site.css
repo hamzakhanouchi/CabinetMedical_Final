@@ -1,20 +1,67 @@
-﻿/* Set padding to keep content from hitting the edges */
-.body-content {
-    margin-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+﻿/* --- 1. PALETTE DE COULEURS PRO (Thème Médical Moderne) --- */
+:root {
+    --primary-color: #4e73df;
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Violet/Bleu moderne */
+    --medical-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); /* Bleu Médical */
+    --card-shadow: 0 10px 20px rgba(0,0,0,0.05), 0 6px 6px rgba(0,0,0,0.1);
+    --hover-shadow: 0 15px 30px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.05);
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
+body {
+    background-color: #f8f9fc; /* Gris très très clair, reposant pour les yeux */
+    font-family: 'Nunito', sans-serif; /* Police ronde et moderne */
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+/* --- 2. DES CARTES MODERNES (Soft UI) --- */
+.card {
+    border: none; /* On enlève les bordures moches */
+    border-radius: 15px; /* Coins bien arrondis */
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+    .card:hover {
+        transform: translateY(-5px); /* La carte "flotte" quand on passe la souris */
+        box-shadow: var(--hover-shadow);
+    }
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid #f1f1f1;
+    font-weight: 700;
+    color: #444;
+}
+
+/* --- 3. BOUTONS STYLÉS --- */
+.btn {
+    border-radius: 50px; /* Boutons en pilule */
+    padding: 10px 25px;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.15s ease;
+}
+
+.btn-primary {
+    background-image: var(--medical-gradient);
+    border: none;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* --- 4. TABLEAUX PROPRES --- */
+.table thead th {
+    border-top: none;
+    border-bottom: 2px solid #e3e6f0;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: #8898aa;
+    font-weight: 700;
+}
+
+.table td {
+    vertical-align: middle;
 }

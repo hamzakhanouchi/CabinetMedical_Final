@@ -22,13 +22,13 @@ namespace CabinetMedical.Controllers
         // POST: Account/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginVM model)
+        public ActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
                 // On cherche l'utilisateur dans la BDD
                 var user = db.Utilisateurs
-                    .FirstOrDefault(u => u.Email == model.Email && u.MotDePasse == model.MotDePasse);
+                    .FirstOrDefault(u => u.Email == model.Email && u.MotDePasse == model.Password);
 
                 if (user != null)
                 {

@@ -19,7 +19,19 @@ namespace CabinetMedical.Controllers
         // GET: Patients (Liste des patients)
         public ActionResult Index()
         {
-            return View(db.Patients.ToList());
+            var patients = db.Patients.AsQueryable();
+
+            // FILTRE MÉDECIN
+            if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Medecin")
+            {
+                int medecinId = (int)Session["UserId"];
+
+                // On garde les patients qui ont au moins un RDV OU une Consultation avec ce médecin
+                patients = patients.Where(p => p.RendezVous.Any(r => r.IdMedecin == medecinId)
+                                            || p.Consultations.Any(c => c.IdMedecin == medecinId));
+            }
+
+            return View(patients.ToList());
         }
 
         // GET: Patients/Details/5
